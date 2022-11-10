@@ -14,7 +14,7 @@ Dockerfileを使ってRuby&Railsをインストールしたコンテナイメー
 $ docker build -f Dockerfile_base -t rails_container:base .
 ```
 
-作成過程のファイルを除いて以下のファイルが存在する。
+以下のファイルを作成する。（予定）
 
 |ファイル名|内容|
 |:---:|:---|
