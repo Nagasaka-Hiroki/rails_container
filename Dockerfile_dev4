@@ -1,0 +1,8 @@
+# Rubyをインストールしたイメージから再開
+FROM rails_container:tmp3
+
+SHELL ["/bin/bash","-c"]
+RUN /root/.rbenv/shims/gem update --system \
+ && /root/.rbenv/shims/gem install rails -v 7.0.4 \
+ && rbenv rehash \
+ && mkdir -p /home/rails_dir
