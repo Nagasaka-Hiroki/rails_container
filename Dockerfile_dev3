@@ -1,0 +1,9 @@
+FROM rails_container:tmp2
+
+SHELL ["/bin/bash","-c"]
+#ENV PATH="$HOME/.rbenv/bin:$PATH"
+
+RUN rbenv rehash \
+ && gem update --system \
+ && gem install rails -v 7.0.4 \
+ && mkdir -p /home/rails_dir
