@@ -1,0 +1,8 @@
+# Ruby&Railsをインストールしたイメージをベースに始める。
+FROM rails_container:base
+
+# 作業ディレクトリを定義する
+WORKDIR /home/raisl_dir
+
+# コンテナ実行時にコマンドを実行する。
+CMD ["pwd"]

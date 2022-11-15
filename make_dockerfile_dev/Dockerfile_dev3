@@ -1,0 +1,19 @@
+# Ruby&Railsをインストールしたイメージをベースに始める。
+FROM rails_container:base
+
+# 作業ディレクトリを定義する
+WORKDIR /home/raisl_dir
+
+# 使用するシェルをbashに変更する
+SHELL ["/bin/bash","-c"]
+
+# 環境変数を設定する。
+ENV PATH="~/.rbenv/shims:$PATH"
+
+# railsプロジェクトをコピー(rails new -B sample　を実行した結果をコピー)
+COPY sample ./
+# bundle installをする。
+RUN bundle install
+
+# サーバを起動。コンテナのIPアドレスはローカル上で172.17.0.2である。
+#CMD ["./bin/rails", "s", "-b", "172.17.0.2"]

@@ -1,0 +1,13 @@
+# Ruby&Railsをインストールしたイメージをベースに始める。
+FROM rails_container:base
+
+# 作業ディレクトリを定義する
+WORKDIR /home/raisl_dir
+
+# 使用するシェルをbashに変更する
+SHELL ["/bin/bash","-c"]
+
+# バックグラウンドで再生する。
+# ファイルをコピーする。
+COPY timer.sh ./
+CMD ["./timer.sh"]
