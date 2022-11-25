@@ -15,7 +15,7 @@ RUN apt-get install nodejs npm -y \
  && npm install --global yarn
 
 # 作業ディレクトリを定義する
-WORKDIR /home/raisl_dir
+WORKDIR /home/rails_dir
 
 # コンテナ起動時に/bin/bashを起動するように設定する。
 CMD ["/bin/bash"]
