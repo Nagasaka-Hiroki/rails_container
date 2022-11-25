@@ -1,0 +1,8 @@
+# Ruby&Railsをインストールしたイメージをベースに始める。
+FROM rails_container:base
+
+# 作業ディレクトリを定義する
+WORKDIR /home/raisl_dir
+
+# コンテナ起動時に/bin/bashを起動するように設定する。
+CMD ["/bin/bash"]

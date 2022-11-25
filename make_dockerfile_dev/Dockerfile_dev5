@@ -1,0 +1,20 @@
+# Ruby&Railsをインストールしたイメージをベースに始める。
+FROM rails_container:base
+
+# 使用するシェルをbashに変更する
+SHELL ["/bin/bash","-c"]
+
+# node.jsとyarnをインストール。
+RUN apt-get update \
+ && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+RUN source ~/.bashrc
+RUN exec $SHELL -l
+RUN command -v nvm
+#RUN nvm install 18.12.1
+#RUN npm install --global yarn
+
+# 作業ディレクトリを定義する
+WORKDIR /home/raisl_dir
+
+# コンテナ起動時に/bin/bashを起動するように設定する。
+CMD ["/bin/bash"]

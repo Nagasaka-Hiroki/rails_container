@@ -7,6 +7,8 @@ $ docker build -f Dockerfile_base -t rails_container:base .
 ```
 このコマンドを実行してイメージファイル、`rails_container:base`をベースとして作成を行う。
 
+また、cssなどのアセットを便利に開発するためにnode.jsとyarnをインストールする。
+
 ## 作業記録
 FROM句の追加とWORKDIR句の追加をする。
 
@@ -106,7 +108,6 @@ Don't run Bundler as root. Bundler can ask for sudo if it is needed, and install
 ができた。次は開発用に`./bin/rails s`を実行する。IPアドレスは以前調べたとき、`cat /etc/hosts`を実行して`172.17.0.2`だということがわかっているので今はこの値を直接打ち込む。
 
 まず手動で起動してみる
-```
 
 上手く行かない。`./bin/rails s`が通らない。rubyがないと言われる。考えられる原因はgemと同じ。なのでこれを解決しないと始まらない。
 
@@ -124,3 +125,70 @@ ENV PATH="~/.rbenv/bin:$PATH"
 →まずgemが通った。なので`Dockerfile_base`の方も更新しておく。
 
 サーバも手動だが起動した。しかし`CMD`で起動しない。
+
+### railsサーバ化 Dockerfile_dev4
+Dockerfile_baseの修正を受けて変更を加える。
+
+また、作業の途中で方向性が間違えていることに気づいたので修正する。
+
+今作っているのは開発で使用するコンテナを作るDockerfileなので、要求されるのはコンテナ実行と同時にサーバを起動することではなく。  
+ホスト環境とファイルを同期、サーバーを起動して開発結果を確認する、可能であればライブリロード機能をつけて効率的に開発をできるようにする。  
+といったところだと思う。故に開発用コンテナはでは以下の設定に固定するとする。
+
+1. ファイルのコピーはしない。`docker run`時にマウントするため不要である。
+1. `CMD`コマンドは`bin/bash`にする。コンテナに入るときはおおよそサーバを起動するとき、またはコンテ内の設定ファイルなどをみるときなのでサーバの起動に設定しない。
+1. `bundle install`しない。ファイルがないので当然だが、コンテナ作成後コンテナに入って手動で実行する。
+（＋ライブリロードがほしいと感じる）
+
+反対に本番環境コンテナは以下の想定である。
+
+1. `RUN git clone`または`COPY`コマンドなどの手段でコンテナ内にファイルを取り込む。
+1. コンテナ実行時にrailsサーバを起動してリクエストを受け付ける状態にする。
+1. `bundle install`する。当然だがサーバを起動するために実行する。(Gemfile.lockがある場合はbundle updateになるか？明確に違いが現状説明できないので後日調べる)
+
+いま簡単に列挙できるものは以上である。上記の設定の違いにすれば、dockerのメリットである開発環境の違いの吸収が有効である（環境のインストールまでは同一なので）と考えている。  
+故に上記の前提で以降開発用コンテナを作成していく。
+
+上記の内容を考えると開発用コンテナはそこまで記述する内容はない。書き直したところ以下のようになる。
+```Dockerfile
+# Ruby&Railsをインストールしたイメージをベースに始める。
+FROM rails_container:base
+
+# 作業ディレクトリを定義する
+WORKDIR /home/raisl_dir
+
+# コンテナ起動時に/bin/bashを起動するように設定する。
+CMD ["/bin/bash"]
+```
+しかし問題なのは、起動のコマンドが変わるという点。考えられるのは3つ。
+
+1. runでイメージを実行してコンテナ作成。
+1. コンテナ作成後、コンテナに入ってシェルを使って操作する。
+1. コンテナをコマンド付きで実行する（単純にサーバを起動したいとき）
+
+である。詳細な内容については実行時に考えるが、前提があるという点だけ注意したい。  
+また、開発用であるためubuntu:22.04から作成しない。本番用は`Dockerfile_base`なしで作成できるようにする。  
+(Dockerfile_dev4をDockerfile_devとしてトップにコピーする。)
+
+### node.jsのインストール Dockerfile_dev5
+インストール意外の項目について作業したので、インストール作業を行っていく。
+node.jsのインストール。nvmでインストールする。
+> - [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm)  
+
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+```
+
+> - [https://nodejs.org/ja/](https://nodejs.org/ja/)
+最新安定版は18.12.1だそうだ。
+
+yarnのインストール
+> - [https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
+
+nvmがシェルだからか上手く行かない。コンテナに直接入って実行はできるがDockerfileとしては難しい。なので別の方法を考える。
+
+### node.jsのインストールその2 Dockerfile_dev6
+nvmだと上手く行かないみたい？いろいろ試したが`nvm`コマンドが実行できない。そのためapt-getで入れる。その方法は以下を参考にする。
+> - [https://qiita.com/nanbuwks/items/ed8adb2d4324c939a349](https://qiita.com/nanbuwks/items/ed8adb2d4324c939a349)
+
+ひとまず上手く行ったはず。完成したものと、Dockerfile_baseと結合して一つにしリポジトリのルートに配置する。

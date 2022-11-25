@@ -1,0 +1,21 @@
+# Ruby&Railsをインストールしたイメージをベースに始める。
+FROM rails_container:base
+
+# 使用するシェルをbashに変更する
+SHELL ["/bin/bash","-c"]
+
+# アップデートをする。この文はDockerfile_baseと結合時に消す。
+RUN apt-get update && apt-get upgrade -y
+# node.jsとyarnをインストール。
+RUN apt-get install nodejs npm -y \
+ && npm install n -g \
+ && n stable \
+ && apt-get purge -y nodejs npm \
+ && exec $SHELL -l \
+ && npm install --global yarn
+
+# 作業ディレクトリを定義する
+WORKDIR /home/raisl_dir
+
+# コンテナ起動時に/bin/bashを起動するように設定する。
+CMD ["/bin/bash"]
