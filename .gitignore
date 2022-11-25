@@ -1,2 +1,2 @@
 # サンプルのrailsプロジェクトは管理から除外する。
-./sample
+./make_dockerfile_dev/sample
