@@ -26,3 +26,9 @@ $ docker build -f Dockerfile_base -t rails_container:base .
 ## Dockerfileの書式
 Dockerfileのリファレンス
 > - [Dockerfile リファレンス](https://matsuand.github.io/docs.docker.jp.onthefly/engine/reference/builder/)
+
+## railsに関する反省
+本リポジトリでサンプルとして作成したrailsプロジェクトについて途中から管理から外すために削除したが、削除の仕方がしっかりしていなくてmaster.keyがpushされていた（メールで知らされてびっくりした）。とりあえず鍵の値が個人特有の値ではなくプロジェクトごとに違ったため一安心であったが今後こういったことはないように注意する。今回はサンプルだったので大きな問題にはならないはず。そのためリポジトリから履歴ごと削除して対応する。以下を参考に削除した。
+
+> - [https://qiita.com/go_astrayer/items/6e39d3ab16ae8094496c](https://qiita.com/go_astrayer/items/6e39d3ab16ae8094496c)
+
