@@ -192,3 +192,18 @@ nvmだと上手く行かないみたい？いろいろ試したが`nvm`コマン
 > - [https://qiita.com/nanbuwks/items/ed8adb2d4324c939a349](https://qiita.com/nanbuwks/items/ed8adb2d4324c939a349)
 
 ひとまず上手く行ったはず。完成したものと、Dockerfile_baseと結合して一つにしリポジトリのルートに配置する。
+
+## 追記
+Dockerfile_dev_guを作成する過程でnode.jsのインストール方法を見直した。以下に示す。
+```dockerfile
+# nvmをダウンロードしてインストール
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash \
+ && source ~/.bashrc
+
+# node.jsをインストールする。
+# yarnをインストール
+RUN source ~/.nvm/nvm.sh \
+ && nvm install 18.12.1 \ 
+ && npm install --global yarn
+```
+これに変更する。

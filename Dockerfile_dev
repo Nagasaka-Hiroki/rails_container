@@ -6,14 +6,16 @@ SHELL ["/bin/bash","-c"]
 
 # アップデートをする。この文はDockerfile_baseと結合時に消す。
 RUN apt-get update && apt-get upgrade -y
-# node.jsとyarnをインストール。
-RUN apt-get install nodejs npm -y \
- && npm install n -g \
- && n stable \
- && apt-get purge -y nodejs npm \
- && exec $SHELL -l \
- && npm install --global yarn
+# nvmをダウンロードしてインストール
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash \
+ && source ~/.bashrc
 
+# node.jsをインストールする。
+# yarnをインストール
+RUN source ~/.nvm/nvm.sh \
+ && nvm install 18.12.1 \ 
+ && npm install --global yarn
+ 
 # 作業ディレクトリを定義する
 WORKDIR /home/rails_dir
 
