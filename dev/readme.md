@@ -1,6 +1,6 @@
 # 開発用コンテナ
 ## 概要
-　Dockerfileでイメージを作成し、そのイメージからdockeer-compose.ymlでコンテナを作成する。
+　Dockerfileでイメージを作成し、そのイメージからdocker-compose.ymlでコンテナを作成する。
 
 　コマンドは以下を実行する。
 
