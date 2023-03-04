@@ -1,14 +1,12 @@
 # Rails container
 ## バージョンについて
-Ruby on Rails(以下 Rails または rails)の実行環境を用意するためのDockerfile。構成は以下の通り。作成時（2022/11）の最新安定版を使用することにする。作成及び動作確認はLinux(Ubuntu22.04)で実行する。
+Ruby on Rails(以下 Rails または rails)の実行環境を用意するためのDockerfile。構成は以下の通り。作成及び動作確認はLinux(Ubuntu22.04)で実行する。
 
 |項目|バージョン|
 |-|-|
 |base image|Ubuntu 22.04|
-|Ruby|3.1.2|
-|Rails|7.0.4|
-|docker|20.10.22|
-|docker compose|v2.14.1|
+|Ruby|3.1.3|
+|Rails|7.0.4.2|
 
 ---
 
@@ -17,16 +15,14 @@ OSを再インストールして環境をセットアップし直す過程で202
 
 - [Ruby 3.1.3 リリース](https://www.ruby-lang.org/ja/news/2022/11/24/ruby-3-1-3-released/)
 
-そのため、`3.1.2`から`3.1.3`にアップデートする。しかしdockerを未だインストールしていないのでTODOとしてここに記録する。
+そのため、`3.1.2`から`3.1.3`にアップデートする。  
+→アップデート完了。コンテナの作成も問題なくできた。
 
-やることは以下。
+rbenvについてかんたんに調べると以下がヒットした。
+- [rbenvで最新のrubyバージョンが見つからなかったときは](https://zenn.dev/yukito0616/articles/80031da7310707)
+- [　rbenv install -l で最新バージョンが出ない時の対処 - Qiita](https://qiita.com/yahsan2/items/afbabacfd414d13a1504)
 
-1. Dockerの動作環境のセットアップ。
-1. Rubyのバージョンアップ。その動作確認。
-1. rbenvでの最新安定版の表示(rbenv install -l)について調べる。
-1. このTODOの文面を取り除く。
-
-作業を実行次第、ここを編集する。
+内容はおおよそrbenvとその関連のバージョンにあるそうだ。そのため最新がほしい場合はrbenv周りのアップデートをする必要がある。そのためにもRubyのアップデート情報も気にしたほうがいいかもしれない。
 
 ---
 

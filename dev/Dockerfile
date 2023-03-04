@@ -4,6 +4,12 @@ FROM ubuntu:22.04
 # 使用するシェルをbashに変更する
 SHELL ["/bin/bash","-c"]
 
+#インストールするRubyとRailsのバージョンを指定する。
+ARG RUBY_VERSION="3.1.3"
+ARG RAILS_VERSION="7.0.4.2"
+#nodeのバージョンを指定する。
+ARG NODE_VERSION="18.14.2"
+
 # ユーザを追加する。
 ARG USERNAME=general_user
 ARG GROUPNAME=general_user
@@ -31,15 +37,14 @@ ENV PATH="~/.rbenv/bin:$PATH"
 ENV PATH="~/.rbenv/shims:$PATH"
 
 # Ruby&Railsをインストール
-RUN git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build \
- && rbenv install 3.1.2 \
- && rbenv global 3.1.2 \
+RUN git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+RUN rbenv install $RUBY_VERSION \
+ && rbenv global  $RUBY_VERSION \
  && rbenv rehash \
  && gem update --system \
- && gem install rails -v 7.0.4 \
+ && gem install rails -v $RAILS_VERSION \
  && gem install foreman \
- && rbenv rehash \
- && mkdir -p /home/$USERNAME/rails_dir
+ && rbenv rehash
 
 # nvmをダウンロードしてインストール
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash \
@@ -48,7 +53,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | b
 # node.jsをインストールする。
 # yarnをインストール
 RUN source ~/.nvm/nvm.sh \
- && nvm install 18.12.1 \ 
+ && nvm install $NODE_VERSION \ 
  && npm install --global yarn
 
 # 作業ディレクトリを定義する
